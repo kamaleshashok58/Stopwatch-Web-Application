@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Stopwatch Web Application</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #3f0d88, #00b4d8);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    #time {
+      font-size: 48px;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #ffffff22;
+      color: white;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #ffffff44;
+    }
+
+    #laps {
+      max-height: 200px;
+      overflow-y: auto;
+      width: 200px;
+      text-align: left;
+    }
+
+    .lap {
+      border-bottom: 1px solid #ffffff44;
+      padding: 5px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Stopwatch Web Application</h1>
+  <div id="time">00:00:00</div>
+  <div class="buttons">
+    <button onclick="start()">Start</button>
+    <button onclick="pause()">Pause</button>
+    <button onclick="reset()">Reset</button>
+    <button onclick="lap()">Lap</button>
+  </div>
+  <div id="laps"></div>
+
+  <script>
+    let [h, m, s] = [0, 0, 0];
+    let timer = null;
+
+    function updateTime() {
+      s++;
+      if (s === 60) { s = 0; m++; }
+      if (m === 60) { m = 0; h++; }
+      document.getElementById('time').innerText = 
+        `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function start() {
+      if (timer) return;
+      timer = setInterval(updateTime, 1000);
+    }
+
+    function pause() {
+      clearInterval(timer);
+      timer = null;
+    }
+
+    function reset() {
+      pause();
+      [h, m, s] = [0, 0, 0];
+      document.getElementById('time').innerText = '00:00:00';
+      document.getElementById('laps').innerHTML = '';
+    }
+
+    function lap() {
+      if (!timer) return;
+      const lapTime = document.getElementById('time').innerText;
+      const lapEntry = document.createElement('div');
+      lapEntry.className = 'lap';
+      lapEntry.textContent = `Lap: ${lapTime}`;
+      document.getElementById('laps').appendChild(lapEntry);
+    }
+  </script>
+
+</body>
+</html>
